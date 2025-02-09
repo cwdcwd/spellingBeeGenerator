@@ -39,7 +39,7 @@ fastifyServer.get('/api/spelling-list', async (request, reply) => {
       // reasoning_effort: "medium",
       messages: [
         {
-          role: "user",
+          role: 'user',
           content: promptText
         }
       ],

@@ -2,13 +2,14 @@
   "name": "spelling-bee-generator",
   "version": "1.0.0",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./dist/index.js",
     "watch": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc && npm run copy-public",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint --config eslint.config.js .",
+    "lint:fix": "eslint --fix --config eslint.config.js .",
     "copy-public": "cp -r ./src/public ./dist"
   },
   "author": "cwd<cwd@lazybaer.com",
