@@ -4,11 +4,12 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./dist/index.ts",
+    "start": "node ./dist/index.js",
     "watch": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "tsc",
+    "build": "tsc && npm run copy-public",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "copy-public": "cp -r ./src/public ./dist"
   },
   "author": "cwd<cwd@lazybaer.com",
   "license": "ISC",
