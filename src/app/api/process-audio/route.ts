@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
         model: OPENAI_MODEL,
       })
 
-    return new NextResponse('Hello, world!', { status: 200 })
+    return new NextResponse(JSON.stringify(oaiResp), { status: 200 })
   } catch (error) {
     console.error('Error processing request:', error)
     return new NextResponse('Internal server error', { status: 500 })
