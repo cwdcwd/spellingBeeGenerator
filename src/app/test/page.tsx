@@ -61,7 +61,7 @@ const Test = () => {
         {isRecording ? 'Stop' : 'Start'}
       </button>
       {transcription && (
-        <textarea value={transcription} readOnly rows={10} cols={50} />
+        <textarea value={transcription} readOnly rows={10} cols={50} className="red-text" />
       )}
       <style jsx>{`
         .container {
