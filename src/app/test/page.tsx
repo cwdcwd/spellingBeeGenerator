@@ -22,11 +22,27 @@ const Test = () => {
         audioChunks.current.push(event.data);
       };
 
-      recorder.onstop = () => {
+      recorder.onstop = async () => {
         const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        audio.play();
+        const formData = new FormData();
+        formData.append('file', audioBlob, 'audio.wav');
+
+        try {
+          const response = await fetch('/api/process-audio', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to process audio');
+          }
+
+          const result = await response.json();
+          console.log('Transcription result:', result);
+        } catch (error) {
+          console.error('Error processing audio:', error);
+        }
+
         audioChunks.current = [];
       };
 
