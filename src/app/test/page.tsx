@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 const Test = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [transcription, setTranscription] = useState<string | null>(null);
   const audioChunks = useRef<Blob[]>([]);
 
   const handleButtonClick = async () => {
@@ -39,6 +40,7 @@ const Test = () => {
 
           const result = await response.json();
           console.log('Transcription result:', result);
+          setTranscription(result.text);
         } catch (error) {
           console.error('Error processing audio:', error);
         }
@@ -55,9 +57,12 @@ const Test = () => {
     <div className="container">
       <h1>Test Page</h1>
       <p>This is the test page.</p>
-      <button onClick={handleButtonClick}>
+      <button onClick={handleButtonClick} name='recordButton'>
         {isRecording ? 'Stop' : 'Start'}
       </button>
+      {transcription && (
+        <textarea value={transcription} readOnly rows={10} cols={50} />
+      )}
       <style jsx>{`
         .container {
           display: flex;
@@ -73,6 +78,11 @@ const Test = () => {
           font-size: 16px;
           margin-top: 20px;
           cursor: pointer;
+        }
+        textarea {
+          margin-top: 20px;
+          padding: 10px;
+          font-size: 16px;
         }
       `}</style>
     </div>

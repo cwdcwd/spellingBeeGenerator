@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import formidable, { IncomingForm } from 'formidable';
-import fs from 'fs';
-import { OpenAI } from 'openai'; // Adjust the import according to your setup
+import fs from 'fs/promises';
+import { OpenAI, toFile } from 'openai'; // Adjust the import according to your setup
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? ''
 const OPENAI_MODEL = process.env.OPENAI_S2T_MODEL ?? 'whisper-1'
@@ -21,25 +20,29 @@ export async function POST(req: NextRequest) {
     const data = await req.formData()
     const formFile = data.get('file')
     // save formFile to disk
-    const file = formFile as File
-    const arrayBuffer = await file.arrayBuffer()
+    const fileFromFormFile = formFile as File
+    const arrayBuffer = await fileFromFormFile.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
     const tempFilePath = `/tmp/uploaded-audio-${new Date().getTime()}.wav`
 
-    fs.writeFileSync(tempFilePath, buffer)
-    const fileStream = fs.createReadStream(tempFilePath)
+    await fs.writeFile(tempFilePath, buffer)
+    const file = await toFile(buffer, fileFromFormFile.name, { type: fileFromFormFile.type })
     
-    console.log('file:', file)
+    console.log('file:', fileFromFormFile)
 
-      if (!file) {
-        return new NextResponse('No file uploaded', { status: 400 })
-      }
-    
-      const oaiResp = await openai.audio.transcriptions.create({
-        file: fileStream,
-        model: OPENAI_MODEL,
-      })
+    if (!fileFromFormFile) {
+      return new NextResponse('No file uploaded', { status: 400 })
+    }
+  
+    const oaiResp = await openai.audio.transcriptions.create({
+      file,
+      model: OPENAI_MODEL,
+    })
 
+    // delete temp file
+    await fs.unlink(tempFilePath)
+
+    console.log('oaiResp:', oaiResp)
     return new NextResponse(JSON.stringify(oaiResp), { status: 200 })
   } catch (error) {
     console.error('Error processing request:', error)
