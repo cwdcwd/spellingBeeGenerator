@@ -8,6 +8,8 @@ const Test = () => {
   const [transcription, setTranscription] = useState<string | null>(null);
   const [ageLevel, setAgeLevel] = useState<number>(9); // Default age level set to 9
   const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
+  const [word, setWord] = useState<string | null>(null); // State to hold the word
+  const [isMatch, setIsMatch] = useState<boolean | null>(null); // State to hold the comparison result
   const audioChunks = useRef<Blob[]>([]);
 
   const handleRecordClick = async () => {
@@ -42,8 +44,25 @@ const Test = () => {
           }
 
           const result = await response.json();
+          const transcription = result.text;
           console.log('Transcription result:', result);
-          setTranscription(result.text);
+          setTranscription(transcription); // Set the transcription in state
+
+          // Send the transcription result and the word to the new endpoint
+          const compareResponse = await fetch('/api/judge', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ transcription, word }),
+          });
+
+          if (!compareResponse.ok) {
+            throw new Error('Failed to compare transcription');
+          }
+
+          const compareResult = await compareResponse.json();
+          setIsMatch(compareResult.isMatch);
         } catch (error) {
           console.error('Error processing audio:', error);
         } finally {
@@ -68,6 +87,7 @@ const Test = () => {
         throw new Error('Failed to generate word');
       }
       const { word } = await wordResponse.json();
+      setWord(word); // Set the word in state
 
       // Fetch the audio
       const audioResponse = await fetch('/api/generate-audio', {
@@ -116,7 +136,9 @@ const Test = () => {
         />
       </div>
       {isLoading && <p>Loading...</p>}
+      {word && <p>Generated Word: {word}</p>}
       {transcription && <p>Transcription: {transcription}</p>}
+      {isMatch !== null && <p>Match: {isMatch ? 'Yes' : 'No'}</p>}
       <style jsx>{`
         .container {
           display: flex;
