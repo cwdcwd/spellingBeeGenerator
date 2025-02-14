@@ -7,9 +7,10 @@ const Test = () => {
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
   const [ageLevel, setAgeLevel] = useState<number>(9); // Default age level set to 9
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
   const audioChunks = useRef<Blob[]>([]);
 
-  const handleButtonClick = async () => {
+  const handleRecordClick = async () => {
     if (isRecording) {
       // Stop recording
       mediaRecorder?.stop();
@@ -30,6 +31,7 @@ const Test = () => {
         formData.append('file', audioBlob, 'audio.wav');
 
         try {
+          setIsLoading(true); // Set loading state to true
           const response = await fetch('/api/process-audio', {
             method: 'POST',
             body: formData,
@@ -44,6 +46,8 @@ const Test = () => {
           setTranscription(result.text);
         } catch (error) {
           console.error('Error processing audio:', error);
+        } finally {
+          setIsLoading(false); // Set loading state to false
         }
 
         audioChunks.current = [];
@@ -56,6 +60,7 @@ const Test = () => {
 
   const handleSayWordClick = async () => {
     try {
+      setIsLoading(true); // Set loading state to true
       const response = await fetch(`/api/generate-word?ageLevel=${ageLevel}`);
       if (!response.ok) {
         throw new Error('Failed to generate word');
@@ -66,6 +71,8 @@ const Test = () => {
       audio.play();
     } catch (error) {
       console.error('Error generating word audio:', error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
     }
   };
 
@@ -73,14 +80,6 @@ const Test = () => {
     <div className="container">
       <h1>Test Page</h1>
       <p>This is the test page.</p>
-      <div className="button-group">
-        <button onClick={handleSayWordClick} name="sayWordButton">
-          Say Word
-        </button>
-        <button onClick={handleButtonClick} name="recordButton">
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
-        </button>
-      </div>
       <div className="age-level">
         <label htmlFor="ageLevel">Select Age Level:</label>
         <input
@@ -90,8 +89,19 @@ const Test = () => {
           onChange={(e) => setAgeLevel(Number(e.target.value))}
           min="1"
           max="100"
+          disabled={isLoading}
         />
       </div>
+      <div className="button-group">
+        <button onClick={handleSayWordClick} name="sayWordButton" disabled={isLoading}>
+          Say Word
+        </button>
+        <button onClick={handleRecordClick} name="recordButton" disabled={isLoading}>
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
+        </button>
+      </div>
+
+      {isLoading && <p>Loading...</p>}
       {transcription && <p>Transcription: {transcription}</p>}
       <style jsx>{`
         .container {
