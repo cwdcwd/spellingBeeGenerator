@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { OpenAI } from 'openai' // Adjust the import according to your setup
 
+type OpenAIVoice = 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'onyx' | 'nova' | 'sage' | 'shimmer'
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? ''
 const OPENAI_TTS_MODEL = process.env.OPENAI_TTS_MODEL ?? 'tts-1'
-const OPENAI_VOICE: OpenAIVoice = (process.env.OPENAI_VOICE as OpenAIVoice) ?? 'nova';
-
-type OpenAIVoice = 'alloy' | 'ash' | 'coral' | 'echo' | 'fable' | 'onyx' | 'nova' | 'sage' | 'shimmer';
+const OPENAI_VOICE: OpenAIVoice = (process.env.OPENAI_VOICE as OpenAIVoice) ?? 'sage';
 
 const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
-
 
 export async function POST(req: NextRequest) {
   try {

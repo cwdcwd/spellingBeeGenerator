@@ -137,7 +137,7 @@ const Test = () => {
       </div>
       {isLoading && <p>Loading...</p>}
       {word && <p>Generated Word: {word}</p>}
-      {transcription && <p>Transcription: {transcription}</p>}
+      {/* {transcription && <p>Transcription: {transcription}</p>} */}
       {isMatch !== null && <p>Match: {isMatch ? 'Yes' : 'No'}</p>}
       <style jsx>{`
         .container {
