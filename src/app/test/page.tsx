@@ -53,16 +53,34 @@ const Test = () => {
     }
   };
 
+  const handleSayWordClick = async () => {
+    try {
+      const response = await fetch('/api/generate-word');
+      if (!response.ok) {
+        throw new Error('Failed to generate word');
+      }
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play();
+    } catch (error) {
+      console.error('Error generating word audio:', error);
+    }
+  };
+
   return (
     <div className="container">
       <h1>Test Page</h1>
       <p>This is the test page.</p>
-      <button onClick={handleButtonClick} name='recordButton'>
-        {isRecording ? 'Stop' : 'Start'}
-      </button>
-      {transcription && (
-        <textarea value={transcription} readOnly rows={10} cols={50} className="red-text" />
-      )}
+      <div className="button-group">
+        <button onClick={handleSayWordClick} name="sayWordButton">
+          Say Word
+        </button>
+        <button onClick={handleButtonClick} name="recordButton">
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
+        </button>
+      </div>
+      {transcription && <p>Transcription: {transcription}</p>}
       <style jsx>{`
         .container {
           display: flex;
@@ -72,6 +90,10 @@ const Test = () => {
           min-height: 100vh;
           text-align: center;
           padding-top: 20px;
+        }
+        .button-group {
+          display: flex;
+          gap: 10px;
         }
         button {
           padding: 10px 20px;
