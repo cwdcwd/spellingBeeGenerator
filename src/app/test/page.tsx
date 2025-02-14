@@ -61,11 +61,26 @@ const Test = () => {
   const handleSayWordClick = async () => {
     try {
       setIsLoading(true); // Set loading state to true
-      const response = await fetch(`/api/generate-word?ageLevel=${ageLevel}`);
-      if (!response.ok) {
+
+      // Fetch the word
+      const wordResponse = await fetch(`/api/generate-word?ageLevel=${ageLevel}`);
+      if (!wordResponse.ok) {
         throw new Error('Failed to generate word');
       }
-      const audioBlob = await response.blob();
+      const { word } = await wordResponse.json();
+
+      // Fetch the audio
+      const audioResponse = await fetch('/api/generate-audio', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ word }),
+      });
+      if (!audioResponse.ok) {
+        throw new Error('Failed to generate audio');
+      }
+      const audioBlob = await audioResponse.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
       audio.play();
@@ -80,6 +95,14 @@ const Test = () => {
     <div className="container">
       <h1>Test Page</h1>
       <p>This is the test page.</p>
+      <div className="button-group">
+        <button onClick={handleSayWordClick} name="sayWordButton" disabled={isLoading}>
+          Say Word
+        </button>
+        <button onClick={handleRecordClick} name="recordButton" disabled={isLoading}>
+          {isRecording ? 'Stop Recording' : 'Start Recording'}
+        </button>
+      </div>
       <div className="age-level">
         <label htmlFor="ageLevel">Select Age Level:</label>
         <input
@@ -92,15 +115,6 @@ const Test = () => {
           disabled={isLoading}
         />
       </div>
-      <div className="button-group">
-        <button onClick={handleSayWordClick} name="sayWordButton" disabled={isLoading}>
-          Say Word
-        </button>
-        <button onClick={handleRecordClick} name="recordButton" disabled={isLoading}>
-          {isRecording ? 'Stop Recording' : 'Start Recording'}
-        </button>
-      </div>
-
       {isLoading && <p>Loading...</p>}
       {transcription && <p>Transcription: {transcription}</p>}
       <style jsx>{`
