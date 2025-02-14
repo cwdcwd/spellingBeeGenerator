@@ -133,11 +133,12 @@ const Test = () => {
           min="1"
           max="100"
           disabled={isLoading}
+          style={{ backgroundColor: 'black', color: 'white' }}
         />
       </div>
       {isLoading && <p>Loading...</p>}
-      {word && <p>Generated Word: {word}</p>}
-      {/* {transcription && <p>Transcription: {transcription}</p>} */}
+      {/* {word && <p>Generated Word: {word}</p>} */}
+      {transcription && <p>Transcription: {transcription}</p>}
       {isMatch !== null && <p>Match: {isMatch ? 'Yes' : 'No'}</p>}
       <style jsx>{`
         .container {
