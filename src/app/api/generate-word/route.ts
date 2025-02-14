@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const ageLevel = searchParams.get('ageLevel') || 'nine';
-    const promptText = `You’re an English language expert and an expert in child education. Generate a random spelling bee word for pronunciation suitable for a ${ageLevel} year old. Only one word is needed. Response should just be the word, then its pronunciation, and a sentence using the word.`;
+    const promptText = `You’re an English language expert and an expert in child education. Generate a random spelling bee word for pronunciation suitable for a ${ageLevel} year old. Only one word is needed. Response should just be the word, followed by a period and then a sentence using the word. The sentence should be simple and suitable for a ${ageLevel} year old.` //then its the word "pronunciation:" followed by the phonteic sounding out of the pronunciation
 
     const response = await openai.chat.completions.create({
       model: OPENAI_MODEL,
