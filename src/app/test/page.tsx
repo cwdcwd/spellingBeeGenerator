@@ -6,6 +6,7 @@ const Test = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
   const [transcription, setTranscription] = useState<string | null>(null);
+  const [ageLevel, setAgeLevel] = useState<number>(9); // Default age level set to 9
   const audioChunks = useRef<Blob[]>([]);
 
   const handleButtonClick = async () => {
@@ -55,7 +56,7 @@ const Test = () => {
 
   const handleSayWordClick = async () => {
     try {
-      const response = await fetch('/api/generate-word');
+      const response = await fetch(`/api/generate-word?ageLevel=${ageLevel}`);
       if (!response.ok) {
         throw new Error('Failed to generate word');
       }
@@ -80,6 +81,17 @@ const Test = () => {
           {isRecording ? 'Stop Recording' : 'Start Recording'}
         </button>
       </div>
+      <div className="age-level">
+        <label htmlFor="ageLevel">Select Age Level:</label>
+        <input
+          type="number"
+          id="ageLevel"
+          value={ageLevel}
+          onChange={(e) => setAgeLevel(Number(e.target.value))}
+          min="1"
+          max="100"
+        />
+      </div>
       {transcription && <p>Transcription: {transcription}</p>}
       <style jsx>{`
         .container {
@@ -100,6 +112,15 @@ const Test = () => {
           font-size: 16px;
           margin-top: 20px;
           cursor: pointer;
+        }
+        .age-level {
+          margin-top: 20px;
+        }
+        input {
+          padding: 10px;
+          font-size: 16px;
+          width: 60px;
+          text-align: center;
         }
         textarea {
           margin-top: 20px;
