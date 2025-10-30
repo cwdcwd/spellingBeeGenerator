@@ -1,5 +1,9 @@
 "use client";
 
+"use client";
+
+import Link from 'next/link';
+
 const Home = () => {
   return (
     <div className="container">
@@ -11,10 +15,23 @@ const Home = () => {
         <div className="feature">
           <h3>📝 Spelling Lists</h3>
           <p>Generate 7-day spelling schedules for ages 6, 9, 12, and 14</p>
+          <Link href="/generate" className="feature-button">
+            Generate Lists
+          </Link>
         </div>
         <div className="feature">
           <h3>📚 Vocabulary Words</h3>
           <p>Daily vocabulary words with definitions for each age group</p>
+          <Link href="/vocabulary" className="feature-button">
+            Learn Vocabulary
+          </Link>
+        </div>
+        <div className="feature">
+          <h3>🎯 Spelling Test</h3>
+          <p>Practice spelling with AI-powered voice recognition and feedback</p>
+          <Link href="/test" className="feature-button">
+            Take Test
+          </Link>
         </div>
       </div>
       <style jsx>{`
@@ -26,7 +43,7 @@ const Home = () => {
           min-height: 100vh;
           text-align: center;
           padding: 20px;
-          max-width: 800px;
+          max-width: 900px;
           margin: 0 auto;
         }
         
@@ -39,7 +56,7 @@ const Home = () => {
         
         .features {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
           gap: 30px;
           width: 100%;
         }
@@ -51,6 +68,10 @@ const Home = () => {
           padding: 24px;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
           transition: transform 0.2s, box-shadow 0.2s;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 200px;
         }
         
         .feature:hover {
@@ -66,9 +87,34 @@ const Home = () => {
         
         .feature p {
           color: #666;
-          margin: 0;
+          margin: 0 0 20px 0;
           font-size: 14px;
           line-height: 1.5;
+          flex-grow: 1;
+        }
+        
+        .feature-button {
+          display: inline-block;
+          padding: 12px 20px;
+          background-color: #0070f3;
+          color: white;
+          text-decoration: none;
+          border-radius: 8px;
+          font-weight: 600;
+          font-size: 14px;
+          transition: background-color 0.3s, transform 0.2s;
+          border: none;
+          cursor: pointer;
+        }
+        
+        .feature-button:hover {
+          background-color: #005bb5;
+          transform: translateY(-1px);
+          text-decoration: none;
+        }
+        
+        .feature-button:active {
+          transform: translateY(0);
         }
         
         h1 {
@@ -79,6 +125,10 @@ const Home = () => {
         @media (max-width: 768px) {
           .features {
             grid-template-columns: 1fr;
+          }
+          
+          .container {
+            max-width: 600px;
           }
         }
       `}</style>
