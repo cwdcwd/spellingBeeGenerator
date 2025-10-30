@@ -19,6 +19,7 @@ export default function RootLayout({
       <body className="antialiased">
         <nav className="navbar">
           <Link href="/generate">Generate List</Link>
+          <Link href="/vocabulary">Vocabulary</Link>
           <Link href="/test">Test</Link>
         </nav>
         {children}
