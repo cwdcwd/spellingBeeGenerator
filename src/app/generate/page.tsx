@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 const Generate = () => {
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,7 @@ const Generate = () => {
     return { headers, dataRows };
   };
 
-  const fetchAndBuildTable = async () => {
+  const fetchAndBuildTable = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -33,11 +33,11 @@ const Generate = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchAndBuildTable();
-  }, []);
+  }, [fetchAndBuildTable]);
 
   return (
     <div className="container">

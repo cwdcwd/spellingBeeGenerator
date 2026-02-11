@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY ?? '';
@@ -8,7 +8,7 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   console.log('Generating vocabulary words of the day...');
   try {
     const promptText = `

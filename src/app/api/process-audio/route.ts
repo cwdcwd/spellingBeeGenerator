@@ -9,12 +9,6 @@ const openai = new OpenAI({
   apiKey: OPENAI_API_KEY,
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export async function POST(req: NextRequest) {
   try {
     const data = await req.formData()
