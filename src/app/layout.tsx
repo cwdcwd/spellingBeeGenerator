@@ -13,8 +13,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>Lazybaer's Spelling Bee</title>
-        <meta name="description" content="Lazybaer's Spelling Bee app powered by AI" />
+        <title>Lazybaer&apos;s Spelling Bee</title>
+        <meta name="description" content="Lazybaer&apos;s Spelling Bee app powered by AI" />
       </head>
       <body className="antialiased">
         <nav className="navbar">
